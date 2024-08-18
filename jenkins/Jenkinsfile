@@ -7,8 +7,9 @@ pipeline {
         stage('Build and Push Docker Images') {
             steps {
                 script {
-                    // Run build_push.sh from the jenkins directory
+                    // Ensure the build_push.sh script is executable
                     dir('jenkins') {
+                        sh 'chmod +x build_push.sh'  // This sets the script as executable
                         sh './build_push.sh'
                     }
                 }
