@@ -1,7 +1,10 @@
 #!/bin/bash
 
+# Login to Docker Hub
+docker login -u stewiedocker46 -p $DOCKER_PASS
+
 # Backend
-cd backend
+cd ../backend
 docker build -t stewiedocker46/backend:latest .
 docker push stewiedocker46/backend:latest
 
