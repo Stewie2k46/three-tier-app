@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKER_CREDENTIALS_ID = 'jenkins-docker'  // Use the correct Docker Hub credentials ID
+        DOCKER_CREDENTIALS_ID = 'jenkins-docker'  // Docker Hub credentials ID
     }
     stages {
         stage('Build and Push Docker Images') {
@@ -9,8 +9,6 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'jenkins-docker', passwordVariable: 'DOCKER_PASS', usernameVariable: 'DOCKER_USER')]) {
                         sh 'docker login -u $DOCKER_USER -p $DOCKER_PASS'
-
-                        // Navigate to Jenkins directory and execute build_push.sh
                         dir('jenkins') {
                             sh 'chmod +x build_push.sh'
                             sh './build_push.sh'
@@ -22,14 +20,12 @@ pipeline {
         stage('Deploy to Minikube') {
             steps {
                 script {
-                    // Deploy backend
-                    sh 'kubectl apply -f backend/deployment.yaml'
-
-                    // Deploy frontend
-                    sh 'kubectl apply -f frontend/deployment.yaml'
-
-                    // Deploy database
-                    sh 'kubectl apply -f database/deployment.yaml'
+                    // Use the kubeconfig credentials stored in Jenkins
+                    withCredentials([file(credentialsId: 'minikube-kubeconfig', variable: 'KUBECONFIG')]) {
+                        sh 'kubectl apply -f backend/deployment.yaml'
+                        sh 'kubectl apply -f frontend/deployment.yaml'
+                        sh 'kubectl apply -f database/deployment.yaml'
+                    }
                 }
             }
         }
