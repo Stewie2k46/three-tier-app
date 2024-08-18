@@ -1,27 +1,14 @@
 pipeline {
     agent any
     environment {
-        DOCKER_CREDENTIALS_ID = 'jenkins-docker'  // Change this to the ID of your Docker Hub credentials in Jenkins
+        DOCKER_CREDENTIALS_ID = 'jenkins-docker'  // Docker credentials ID from Jenkins credentials
     }
     stages {
         stage('Build and Push Docker Images') {
             steps {
                 script {
-                    // Build and push backend
-                    dir('backend') {
-                        sh 'chmod +x build_push.sh'
-                        sh './build_push.sh'
-                    }
-
-                    // Build and push frontend
-                    dir('frontend') {
-                        sh 'chmod +x build_push.sh'
-                        sh './build_push.sh'
-                    }
-
-                    // Build and push database
-                    dir('database') {
-                        sh 'chmod +x build_push.sh'
+                    // Run build_push.sh from the jenkins directory
+                    dir('jenkins') {
                         sh './build_push.sh'
                     }
                 }
