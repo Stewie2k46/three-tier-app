@@ -1,19 +1,44 @@
 pipeline {
     agent any
     environment {
-        DOCKER_CREDENTIALS_ID = 'jenkins-docker'
+        DOCKER_CREDENTIALS_ID = 'jenkins-docker'  // Change this to the ID of your Docker Hub credentials in Jenkins
     }
     stages {
-        stage('Build') {
+        stage('Build and Push Docker Images') {
             steps {
-                sh './jenkins/build_push.sh'
+                script {
+                    // Build and push backend
+                    dir('backend') {
+                        sh 'chmod +x build_push.sh'
+                        sh './build_push.sh'
+                    }
+
+                    // Build and push frontend
+                    dir('frontend') {
+                        sh 'chmod +x build_push.sh'
+                        sh './build_push.sh'
+                    }
+
+                    // Build and push database
+                    dir('database') {
+                        sh 'chmod +x build_push.sh'
+                        sh './build_push.sh'
+                    }
+                }
             }
         }
-        stage('Deploy') {
+        stage('Deploy to Minikube') {
             steps {
-                sh 'kubectl apply -f backend/deployment.yaml'
-                sh 'kubectl apply -f frontend/deployment.yaml'
-                sh 'kubectl apply -f database/deployment.yaml'
+                script {
+                    // Deploy backend
+                    sh 'kubectl apply -f backend/deployment.yaml'
+
+                    // Deploy frontend
+                    sh 'kubectl apply -f frontend/deployment.yaml'
+
+                    // Deploy database
+                    sh 'kubectl apply -f database/deployment.yaml'
+                }
             }
         }
     }
