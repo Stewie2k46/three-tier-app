@@ -1,0 +1,5 @@
+CREATE DATABASE mydb;
+CREATE TABLE mytable (
+    id SERIAL PRIMARY KEY,
+    data VARCHAR(50)
+);

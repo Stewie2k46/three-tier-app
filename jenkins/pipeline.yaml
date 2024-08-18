@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: jenkins-agent
+spec:
+  containers:
+  - name: jenkins-agent
+    image: jenkins/inbound-agent:latest
+    args:
+    - /bin/sh
+    - -c
+    - "cat"
+    env:
+    - name: JENKINS_URL
+      value: "http://35.89.129.134:8080/"
+    - name: JENKINS_AGENT_NAME
+      value: "jenkins-agent"
+    - name: JENKINS_SECRET
+      value: "<jenkins-agent-secret>"
+  restartPolicy: Never

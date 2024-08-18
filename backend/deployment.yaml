@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: your-docker-repo/backend:latest
+        image: stewiedocker46/backend:latest
         ports:
         - containerPort: 5000
 ---

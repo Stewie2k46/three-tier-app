@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: your-docker-repo/frontend:latest
+        image: stewiedocker46/frontend:latest
         ports:
         - containerPort: 80
 ---
